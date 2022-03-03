@@ -1,0 +1,12 @@
+{
+  "content": {
+    "io.setl.iobc.model.address.NewAddress$Input": {
+      "walletId" : 1
+    }
+  },
+  "createTime": 1637167616164,
+  "messageId": "",
+  "userId": "client",
+  "signature": "",
+  "type": "ADDRESS.NEW"
+}

@@ -1,0 +1,39 @@
+version: "3.2"
+
+networks:
+  setlnetwork:
+    external: true
+
+volumes:
+  master-data:
+
+services:
+  web_master:
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 6
+    hostname: web.master.setl.net
+    image: setl/webserver:1.13
+    networks:
+      setlnetwork:
+        aliases:
+        - web.master.setl.net
+
+    ports:
+      - 8084:8080
+
+    environment:
+      - MY_RPC_HOST=master.setl.net
+      #- MY_RPC_PORT=10003
+      - MY_RPC_USER=user1
+      - MY_RPC_USERPW=test
+      - MY_ORGNAME=Setl
+      - MY_LOCALITY=London
+      - MY_COUNTRY=GB
+
+    working_dir: /opt/webserver

@@ -1,0 +1,21 @@
+repositories {
+  flatDir {
+    dirs '../libs'
+  }
+}
+
+dependencies {
+  //compile fileTree(dir: '../libs', include: ['*.jar'])
+
+  implementation group: 'io.setl', name: 'setl-commons', version: setlCommons
+  implementation group: 'io.setl.bc', name: 'pychain-common', version: pychainVersion
+  implementation group: 'org.springframework', name: 'spring-jdbc', version: springVersion
+  implementation group: 'org.postgresql', name: "postgresql", version: postgresVersion
+
+  implementation group: 'com.h2database', name: 'h2', version: h2Version
+
+  implementation "org.springframework.boot:spring-boot-starter-jta-atomikos:${springBootVersion}"
+
+  compile project(':iobc-model')
+}
+

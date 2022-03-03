@@ -1,0 +1,75 @@
+setl.vault.box.entropy.1: {
+  description: 'Supplementary key material which is used in the processing of "<{SECURE}>"
+    properties.',
+  type: BINARY,
+  value: ws2k7BHiIuXvZIE+v6rB4EPudv9X/2tUzL8MHhTmI5PTECKWJyI1cRuJxHAAeCE7
+}
+setl.vault.box.entropy.2: {
+  description: 'Supplementary key material which is used in the processing of "<{SECURE}>"
+    properties.',
+  type: BINARY,
+  value: n+dC3DJcLQ6WCVA2J2xZRVpPsPJGi7IG/rHR6yrg78fMQDDSieCehqGPs8hatVL1
+}
+setl.vault.box.entropy.3: {
+  description: 'Supplementary key material which is used in the processing of "<{SECURE}>"
+    properties.',
+  type: BINARY,
+  value: MVnJFJNHWYFgFux5vrisk+yfdWbQ9UrqasclU35ZTbXK3ExJfX1DLC59LspFOJOB
+}
+setl.vault.box.entropy.4: {
+  description: 'Supplementary key material which is used in the processing of "<{SECURE}>"
+    properties.',
+  type: BINARY,
+  value: iEy17kWuDyWnIb4d8lWwNIHIxqCzoM3NxReSD3AdSXg9hQKgbt8K6INPxkMecILl
+}
+setl.vault.box.entropy.5: {
+  description: 'Supplementary key material which is used in the processing of "<{SECURE}>"
+    properties.',
+  type: BINARY,
+  value: 7eYisvtUtCyJrXLftd0m7hK8F5YNrnZDw53YSKP8GCqIHAtnIH8ChXH30gy3vFWN
+}
+wallet-default-key:
+  description: |
+    A comma-separated list of the secrets used to protect a Wallet Address's private key. Normally, one is chosen at random from this list. Vault entries called wallet-[name] must exist. If the entry is a secret key then that is used to wrap the private key. Otherwise the entry's binary representation is used as input to a KDF.
+  type: PLAIN
+  value: key-1-1, key-1-2, key-1-3, key-1-4, key-1-5
+wallet-key-1-1: {
+  description: Entropy used in key derivation for the AES secret key used to protect
+    a Wallet Address's private key.,
+  type: BOX,
+  value: iQJR6xzQ6TnV0X+qXfJdHfm5kETqMdvDSnP/Z6Y0D6FHi+ZManNFAtwXspP+Oa3XygQ2aU+S4SeE
+    2IPrlwkiDyH6KRNBKJ6CZRvkDnN96B7A0j/H88JbsknDf8nWe1qVB5WDjhNqrLLddKsrDQJ/IOjX qQo4SpGbrgVSW8KaJhUvhzIXMyrkD9fQCiJfMvWuF+zZ9u6cEde3o2c8O5uj5nS/GaNRilgVHlrI
+    Fmt90Fg=
+}
+wallet-key-1-2: {
+  description: Entropy used in key derivation for the AES secret key used to protect
+    a Wallet Address's private key.,
+  type: BOX,
+  value: bPWQ09Q0XJ/48cpiYBZP6YHPCryVviZTSyGP25z0g3QaV6xYONQRRRlOtHUrsq40ZqGDTPs7bG8T
+    2PzROlJ0hYLztqLQ2nn7evLPBlUxDDrDs9pLQnflLRvTE051/Q1zgNInO3GUXgtvh1GvlhWmbKM7 JYIF2LGCA9fBnuB5TTESvlkRmOngLZzv2KLSgWnzMUh7e+YA39T23nkirEzJpI/hkE7r4TDhOl3J
+    yfhQ5K4=
+}
+wallet-key-1-3: {
+  description: Entropy used in key derivation for the AES secret key used to protect
+    a Wallet Address's private key.,
+  type: BOX,
+  value: O1qJfMxxfgt1AioIqRSSqJ3ZSCARUPsXwPdDVDvSFYBEt95NfmJDQs6hfOGpFiclrb7R+gHf5TH3
+    LqIlKmHZl/OF05KZRzjeJ7Ll+gQMuokAT7rkVIk2eoQk6GfKMYpZ4oteVYKNGmPcWKwE/w2lI/Ja LldvIgjBmW7UU/UJI1WVDYRleO/cGdL8cpuGa5xysxtSgEbUHxm5S7OOifRVoxALSRlz23FqER01
+    jqkf8oU=
+}
+wallet-key-1-4: {
+  description: Entropy used in key derivation for the AES secret key used to protect
+    a Wallet Address's private key.,
+  type: BOX,
+  value: 1G7eALo0Kgh3n/divkLb9yP+fvpYahTDQV6546K4Ujj5M5gLhPAP5t4w75rdWSiGdVQvqQqjfzA6
+    O5KL9MsZU+H4113skAg/G0vGBSRGQqfUi059/zYPzsn+Ns63YKXfBhFUrTEthZdKgIEtaeyOjyAn yIHoE7V+lRrORK8zecLtPBX8HGUPMRGbWeGUhFfJLHoicnl4BlIZKOF10KFVcv8GvuJlr7rz+q8X
+    3XSeQ68=
+}
+wallet-key-1-5: {
+  description: Entropy used in key derivation for the AES secret key used to protect
+    a Wallet Address's private key.,
+  type: BOX,
+  value: qnyH22hfMK8E5N8+Pg/Gqk0VgrsMBdjnA1ECa6GJbn81wws9J/knr0DjUvvDuEqCh8BlZcCrtXhv
+    bOrCdgHyq2IqzyZzBTiqLKX40p/2zGCc86Smlxxv98f/j9doS13SBAqqGBstbT2NAaebnIO1VTDI wer/KlUgMthB5DNWrQcuOFPd43hYslfIiK+VKKqJYrEpqj6ICcEqQZ5mCrs7aiRLblD90u6c8+eh
+    XuAKe2E=
+}

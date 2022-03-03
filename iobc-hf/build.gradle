@@ -1,0 +1,15 @@
+repositories {
+  flatDir {
+    dirs '../libs'
+  }
+}
+
+dependencies {
+  compile fileTree(dir: '../libs', include: ['*.jar'])
+
+  implementation group: 'org.hyperledger.fabric', name: 'fabric-gateway-java', version: '2.2.3'
+  implementation group: 'org.bouncycastle', name: 'bcprov-debug-jdk15on', version: bouncyCastleVersion
+
+  compile project(':iobc-model')
+  compile project(':iobc-table')
+}

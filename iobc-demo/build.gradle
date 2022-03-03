@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        //Allow local repository for snapshot builds
+        //if (version.endsWith("SNAPSHOT")) {
+            mavenLocal()
+            mavenCentral()
+        //}
+        //maven { url "http://si-nexus01.dev.setl.io:8081/repository/maven-public/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'org.springframework.boot'        //For fat jar support
+
+repositories {
+    flatDir {
+        dirs '../libs'
+    }
+}
+
+//Don't publish apps
+tasks.withType(PublishToMavenRepository).configureEach { it.enabled = false }
+
+springBoot {
+    mainClassName = 'io.setl.iobc.ClientApp'
+    buildInfo()
+}
+
+dependencies {
+    compile project(':iobc-model')
+    compile project(':iobc-client')
+
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: jacksonVersion
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: jacksonVersion
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jacksonVersion
+
+    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: log4j2Version
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4j2Version
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j2Version
+
+    compile("org.springframework.boot:spring-boot-starter:${springBootVersion}"){
+        exclude module: 'spring-boot-starter-tomcat'
+        exclude module: 'spring-boot-starter-logging'
+    }
+
+    compile group: 'io.setl.bc', name: 'pychain-web-base', version: pychainVersion
+}

@@ -1,0 +1,37 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "IOBC HTTP Query support",
+    "version": "1.0",
+    "contact": {
+      "name": "Dr Simon Greatrix"
+    }
+  },
+  "components" : {
+    "schemas": {
+      "balancesForWallet" : {
+        "type" : "object",
+        "description" : "A map showing for every address in the wallet the number of tokens held and how many are locked against transfer",
+        "additionalProperties" : {
+          "type" : "object",
+          "properties" : {
+            "balance" : {
+              "minimum" : 0,
+              "type" : "integer",
+              "description" : "The number of tokens held"
+            },
+            "locked" : {
+              "minimum" : 0,
+              "type" : "integer",
+              "description" : "The number of tokens that are held but locked against transfer"
+            }
+          }
+        }
+      },
+      "unstructured.data" : {
+        "type": "object",
+        "additionalProperties" : true
+      }
+    }
+  }
+}

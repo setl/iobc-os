@@ -1,0 +1,449 @@
+---
+version: "3.6"
+
+#
+#
+# Shared configuration for the Besu nodes
+#
+x-besu-bootnode-def:
+  &besu-bootnode-def
+  restart: "on-failure"
+  image: hyperledger/besu:${BESU_VERSION:-latest}
+  env_file:
+    - ./config/besu/.env
+  entrypoint:
+    - /bin/bash
+    - -c
+    - |
+
+      cp "/config/${BESU_CONS_ALGO:-QBFT}genesis.json" /config/genesis.json
+
+      /opt/besu/bin/besu public-key export --to=/tmp/bootnode_pubkey;
+      /opt/besu/bin/besu \
+      --config-file=/config/config.toml \
+      --p2p-host=$$(hostname -i) \
+      --genesis-file=/config/genesis.json \
+      --node-private-key-file=/opt/besu/keys/nodekey \
+      --min-gas-price=0 \
+      --rpc-http-api=DEBUG,EEA,WEB3,ETH,NET,PERM,${BESU_CONS_ALGO:-QBFT} \
+      --revert-reason-enabled \
+      --rpc-ws-api=DEBUG,EEA,WEB3,ETH,NET,PERM,${BESU_CONS_ALGO:-QBFT} ;
+
+
+x-besu-def:
+  &besu-def
+  restart: "on-failure"
+  image: hyperledger/besu:${BESU_VERSION:-latest}
+  env_file:
+    - ./config/besu/.env
+  entrypoint:
+    - /bin/bash
+    - -c
+    - |
+
+      cp "/config/${BESU_CONS_ALGO:-QBFT}genesis.json" /config/genesis.json
+
+      while [ ! -f "/opt/besu/public-keys/bootnode_pubkey" ]; do sleep 5; done ;
+      /opt/besu/bin/besu \
+      --config-file=/config/config.toml \
+      --p2p-host=$$(hostname -i) \
+      --genesis-file=/config/genesis.json \
+      --node-private-key-file=/opt/besu/keys/nodekey \
+      --min-gas-price=0 \
+      --rpc-http-api=DEBUG,EEA,WEB3,ETH,NET,PERM,${BESU_CONS_ALGO:-QBFT} \
+      --revert-reason-enabled \
+      --rpc-ws-api=DEBUG,EEA,WEB3,ETH,NET,PERM,${BESU_CONS_ALGO:-QBFT} ;
+
+
+#
+#
+# The network holding all the containers
+#
+networks:
+  iobc-net:
+    name: iobc-network
+    driver: bridge
+    ipam:
+      config:
+        # The network is divided up as:
+        # 172.19.1.xxx : SETL
+        # 172.19.2.xxx : Kafka
+        # 172.19.3.xxx : Besu
+        # 172.19.4.xxx : Hyperledger Fabric
+        - subnet: 172.19.0.0/20
+
+#
+#
+services:
+  #
+  #
+  # Kafka
+  #
+  kafka-zookeeper:
+    image: docker.io/bitnami/zookeeper:3.7
+    container_name: kafka-zookeper
+    hostname: kafka-zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.2.11
+
+  kafka-server:
+    container_name: kafka-server
+    hostname: kafka-server
+    image: docker.io/bitnami/kafka:3
+    ports:
+      - "9092:9092"
+    volumes:
+      - "kafka_data:/bitnami"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=kafka-zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9093,EXTERNAL://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka-server:9093,EXTERNAL://localhost:9092
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+    depends_on:
+      - zookeeper
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.2.12
+
+  #
+  #
+  # Besu
+  #
+  besu-validator1:
+    << : *besu-bootnode-def
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=validator1,service.version=${BESU_VERSION:-latest}
+    volumes:
+      - besu-public-keys:/tmp/
+      - ./config/besu/:/config
+      - ./config/nodes/validator1:/opt/besu/keys
+      - ./logs/besu:/tmp/besu
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.3.11
+
+  besu-validator2:
+    << : *besu-def
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=validator2,service.version=${BESU_VERSION:-latest}
+    volumes:
+      - besu-public-keys:/opt/besu/public-keys/
+      - ./config/besu/:/config
+      - ./config/nodes/validator2:/opt/besu/keys
+      - ./logs/besu:/tmp/besu
+    depends_on:
+      - besu-validator1
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.3.12
+
+  besu-validator3:
+    << : *besu-def
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=validator3,service.version=${BESU_VERSION:-latest}
+    volumes:
+      - besu-public-keys:/opt/besu/public-keys/
+      - ./config/besu/:/config
+      - ./config/nodes/validator3:/opt/besu/keys
+      - ./logs/besu:/tmp/besu
+    depends_on:
+      - besu-validator1
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.3.13
+
+  besu-validator4:
+    << : *besu-def
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=validator4,service.version=${BESU_VERSION:-latest}
+    volumes:
+      - besu-public-keys:/opt/besu/public-keys/
+      - ./config/besu/:/config
+      - ./config/nodes/validator4:/opt/besu/keys
+      - ./logs/besu:/tmp/besu
+    depends_on:
+      - besu-validator1
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.3.14
+
+  besu-rpcnode:
+    << : *besu-def
+    container_name: besu-rpcnode
+    hostname: rpcnode
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=besu-rpcnode,service.version=${BESU_VERSION:-latest}
+    volumes:
+      - besu-public-keys:/opt/besu/public-keys/
+      - ./config/besu/:/config
+      - ./config/nodes/rpcnode:/opt/besu/keys
+      - ./logs/besu:/tmp/besu
+    depends_on:
+      - besu-validator1
+    ports:
+      - 8545:8545/tcp
+      - 8546:8546/tcp
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.3.15
+
+  besu-explorer:
+    container_name: besu-explorer
+    hostname: besu_explorer
+    build: block-explorer-light/.
+    image: quorum-dev-quickstart/block-explorer-light:develop
+    depends_on:
+      - besu-rpcnode
+    ports:
+      - 25000:8003/tcp
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.3.21
+
+
+  #
+  #
+  # Fabric
+  #
+  fabric-ca-org1:
+    image: hyperledger/fabric-ca:latest
+    hostname: fabric-ca-org1
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-org1
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=7054
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:17054
+    ports:
+      - "7054:7054"
+      - "17054:17054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ./volumes/fabric-ca/org1:/etc/hyperledger/fabric-ca-server
+    container_name: fabric-ca-org1
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.4.21
+
+  fabric-ca-org2:
+    image: hyperledger/fabric-ca:latest
+    hostname: fabric-ca-org2
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-org2
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=8054
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:18054
+    ports:
+      - "8054:8054"
+      - "18054:18054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ./volumes/fabric-ca/org2:/etc/hyperledger/fabric-ca-server
+    container_name: fabric-ca-org2
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.4.22
+
+  fabric-ca-orderer:
+    image: hyperledger/fabric-ca:latest
+    hostname: fabric-ca-orderer
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=9054
+      - FABRIC_CA_SERVER_OPERATIONS_LISTENADDRESS=0.0.0.0:19054
+    ports:
+      - "9054:9054"
+      - "19054:19054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ./volumes/fabric-ca/ordererOrg:/etc/hyperledger/fabric-ca-server
+    container_name: fabric-ca-orderer
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.4.20
+  
+
+  fabric-orderer:
+    hostname: fabric-orderer
+    container_name: fabric-orderer
+    image: hyperledger/fabric-orderer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_CLUSTER_CLIENTCERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_CLUSTER_CLIENTPRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_CLUSTER_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_GENERAL_BOOTSTRAPMETHOD=none
+      - ORDERER_CHANNELPARTICIPATION_ENABLED=true
+      - ORDERER_ADMIN_TLS_ENABLED=true
+      - ORDERER_ADMIN_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_ADMIN_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_ADMIN_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:7053
+      - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:17050
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    volumes:
+        - ./volumes/orgs/orderer/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+        - ./volumes/orgs/orderer/msp:/var/hyperledger/orderer/msp
+        - ./volumes/orgs/orderer/tls:/var/hyperledger/orderer/tls
+        - fabric-orderer:/var/hyperledger/production/orderer
+    ports:
+      - 7050:7050
+      - 7053:7053
+      - 17050:17050
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.4.30
+
+  fabric-org1-peer0:
+    hostname: fabric-org1-peer0
+    container_name: fabric-org1-peer0
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      #Generic peer variables
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
+      - CORE_PEER_ID=fabric-org1-peer0
+      - CORE_PEER_ADDRESS=fabric-org1-peer0:7051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=fabric-org1-peer0:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=fabric-org1-peer0:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=fabric-org1-peer0:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:17051
+    volumes:
+        - ${DOCKER_SOCK}:/host/var/run/docker.sock
+        - ./volumes/orgs/org1/msp:/etc/hyperledger/fabric/msp
+        - ./volumes/orgs/org1/tls:/etc/hyperledger/fabric/tls
+        - fabric-org1-peer0:/var/hyperledger/production
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 7051:7051
+      - 17051:17051
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.4.31
+
+  fabric-org2-peer0:
+    hostname: fabric-org2-peer0
+    container_name: fabric-org2-peer0
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      #Generic peer variables
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric-network
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      # Peer specific variables
+      - CORE_PEER_ID=fabric-org2-peer0
+      - CORE_PEER_ADDRESS=fabric-org2-peer0:9051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
+      - CORE_PEER_CHAINCODEADDRESS=fabric-org2-peer0:9052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=fabric-org2-peer0:9051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=fabric-org2-peer0:9051
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:19051
+    volumes:
+        - ${DOCKER_SOCK}:/host/var/run/docker.sock
+        - ./volumes/orgs/org2/msp:/etc/hyperledger/fabric/msp
+        - ./volumes/orgs/org2/tls:/etc/hyperledger/fabric/tls
+        - fabric-org2-peer0:/var/hyperledger/production
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: peer node start
+    ports:
+      - 9051:9051
+      - 19051:19051
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.4.32
+
+  fabric-cli:
+    hostname: fabric-cli
+    container_name: fabric-cli
+    image: hyperledger/fabric-tools:latest
+    labels:
+      service: hyperledger-fabric
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=INFO
+      #- FABRIC_LOGGING_SPEC=DEBUG
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+        - ./volumes/cli/organizations:/opt/gopath/src/github.com/hyperledger/fabric/peer/organizations
+        - ./volumes/cli/scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+    depends_on:
+      - fabric-org1-peer0
+      - fabric-org2-peer0
+    networks:
+      iobc-net:
+        ipv4_address: 172.19.4.39
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
+  fabric-orderer:
+    driver: local
+  fabric-org1-peer0:
+    driver: local
+  fabric-org2-peer0:
+    driver: local
+  besu-public-keys:
+    driver: local
+
+

@@ -1,0 +1,105 @@
+# Application properties for IOBC server
+#
+setl:
+  #
+  # Properties for the wallet encryption.
+  vault:
+    box:
+      db-password: <{SECURE}>/5gGAOUSVIL1Ie32C1B6Ua9tefEzTS8WADzCspR7P5XNXjKu51BIawJci3huzQPksk/FNj4HP+5jkwmJL8oq7bgMaaWLO4O3
+      wallet-address-delete: <{SECURE}>2NTvWZUzMNI8VgP4XRSkC6RJe7xxGvT7/ZGTOmRMEJL/ij2S6x7wtS2f9sgyPkGvy0NyRLJGwtTCqwozw3QXQhzHAJfDhkv7
+      wallet-key-1-5: <{SECURE}>snnFlalksUDtgwueRtN0HPEITFm5CB184mXbqEuINjWl0/pIywI/6R5GpQDHvY7yc9+SdEZBw/95H3cnfkn0/tzyhFUnsYgK
+      wallet-key-1-4: <{SECURE}>HN5r/MucwWDn664UKCxujQAqUXDG1TVnps350TxZHZD3OMly9N+yT5Bk8p85V0baKv2J3Btaw7jgqDNRLYDVKrrbUlsRydRm
+      wallet-key-1-3: <{SECURE}>SiX5JXee7QKI7787B64sxGnb/zhzFlM0tfVlb94hgJ1VjjpPcjSlLCwyUbGRMNe3ufFaVKokKBUXEZyGPdam8bj12QrsN7BS
+      wallet-key-1-2: <{SECURE}>gTNrmaf4M6xI1HezWdfS2mQIcS/JF9bUZuFXzivjrzqhTe8IdC+tskogmygUVLtRXpvYtC28gfV327xdeFMk2HSLuGrRPbfzFV4VUnGZpTU=
+      wallet-key-1-1: <{SECURE}>3et+4y70BIuu/yGJ1b7cjnnjyhjpaxL5Vfd0YC1x+af0hrH922ZulUrn3JWkBF0p2aDnXmNFKovNtHaer6APYAZ3a3XiMBuQ
+    secure:
+      local: <{SECURE}>fQjA7cE1tUboL4zHwM4x7OofSeaKfvC//WElED+M3pan/ROoiuH+ERJkVmVNZmKLDbnh6VBiIyEaZwAryVtkgcecleJM4KtqbKt4AY5mR2c9G5YSQqrWU+Z3AvQhX5jGHkfSLAKVTuk=
+      remote: setl.vault.box.entropy.1
+    boxes: db-password, wallet-key-1-1, wallet-key-1-2, wallet-key-1-3, wallet-key-1-4,
+      wallet-key-1-5, wallet-address-delete
+  http:
+    signatures:
+      # Switch this to false to disable HTTP signature checking
+      enabled: true
+  iobc:
+    #
+    # Named chains which IOBC can communicate with
+    chain:
+#      besu:
+#        iobcBrand: BESU
+#        isIobcDefault: true
+#        chainId: 1337
+#        address: http://${BESU_HOST:localhost}:8545/
+
+      fabric:
+        iobcBrand: FABRIC
+        orgName: Org1
+        walletDir: ./data/fabric/wallet
+        ccpFilePath: ./data/fabric/connection-org1.json
+        channelName: setl-channel
+
+        adminUserId: admin
+        adminUserSecret: adminpw
+        caName: ca-org1
+        caUrl: https://${FABRIC_HOST:localhost}:7054
+        tlsPem: ./data/fabric/ca-org1-tlsca.pem
+        orgMspId: Org1MSP
+        cahostname: fabric-ca-org1
+
+      corda:
+        iobcBrand: CORDA
+        rpcHost: localhost
+        rpcPort: 10003
+        country: GB
+        locality: London
+        orgName: Setl
+        username: user1
+        password: test
+    #
+    # IOBC data persistence
+    persistence:
+      nature: sql
+      # Other parameters only relevant if nature is 'sql'
+      #
+      # Postgres example:
+      # jdbcUrl: jdbc:postgresql://${PG_HOST:localhost}:5432/setlnet
+      # username: iobc_server
+      # password: w5AGJqG9YmQ3wQKEnD5w94mH5TFQJ8
+      jdbcUrl: jdbc:h2:file:./data/iobc/state.db;AUTO_SERVER=TRUE
+      username: iobc_server
+      password: w5AGJqG9YmQ3wQKEnD5w94mH5TFQJ8
+      initialiseSchema: true
+#
+# Endpoint security
+# (Uncomment the line below to disable HTTP signature checking)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      enabled: 'true'
+
+server:
+  # HTTP error handling
+  error:
+    whitelabel:
+      enabled: 'true'
+    include-stacktrace: always
+    include-exception: 'true'
+    path: /error
+    include-binding-errors: always
+    include-message: always
+
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}:9092
+    streams:
+      application-id: setl-iobc-server
+      stateDir: ./data/kafka-state
+    producer:
+      client-id: setl-iobc-server
+    client-id: setl-iobc-server
+  jta:
+    log-dir: ./data/transaction-logs

@@ -1,0 +1,28 @@
+if( new File('../libs').isDirectory() ) {
+  repositories {
+    flatDir {
+      dirs '../libs'
+    }
+  }
+}
+
+dependencies {
+  compile fileTree(dir: '../libs', include: ['*.jar'])
+
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: jacksonVersion
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
+  compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: jacksonVersion
+  compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jacksonVersion
+  compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: jacksonVersion
+
+  compile group: 'javax.json', name: 'javax.json-api', version: '1.1.4'
+  compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
+  compile group: 'io.setl.bc', name: 'pychain-common', version: pychainVersion
+  compile group: 'io.setl.bc', name: 'pychain-core-wallet', version: pychainVersion
+  compile group: 'io.setl.http-signatures', name: 'server', version: setlHttpSignatures
+
+  compile group: 'io.setl', name: 'canonical-json', version: '2.1'
+
+  compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+}

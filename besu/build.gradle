@@ -1,0 +1,45 @@
+plugins {
+  id "org.web3j" version "4.8.8"
+}
+
+if( new File('../libs').isDirectory() ) {
+  repositories {
+    flatDir {
+      dirs '../libs'
+    }
+  }
+}
+
+dependencies {
+  implementation group: 'org.web3j', name: 'core', version: '4.8.8'
+  implementation group: 'io.setl', name: 'setl-commons', version: setlCommons
+  implementation group: 'io.setl.bc', name: 'pychain-common', version: pychainVersion
+  implementation group: 'org.bouncycastle', name: 'bcprov-debug-jdk15on', version: bouncyCastleVersion
+  implementation "org.springframework.boot:spring-boot-starter-jta-atomikos:${springBootVersion}"
+
+  compile project(':iobc-model')
+  compile project(':iobc-table')
+}
+
+checkstyleMain.exclude('io/setl/iobc/web3j/**/*.java')
+
+solidity {
+//  executable = '/Users/simon/.web3j/solc/0.8.9/solc'
+  version = '0.8.9'
+}
+
+web3j {
+  generatedPackageName = 'io.setl.iobc.web3j'
+  includedContracts = [
+      'DVP',
+      'BNYBond',
+      'BNYCash',
+      'IERC20',
+      'IERC20Metadata',
+      'IMintable',
+      'ITokenExtensions',
+      'IERC1404',
+      'ILockable',
+      'ILockableMintable'
+  ]
+}

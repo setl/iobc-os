@@ -1,0 +1,1803 @@
+{
+  "components": {
+    "schemas": {
+      "ActionQueue": {
+        "properties": {
+          "claimedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dateDeleted": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dateEntered": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dateUpdated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "lastChangedBy": {
+            "type": "string"
+          },
+          "souceChainSpecifiedSyncObject": {
+            "type": "object"
+          },
+          "sourceAddress": {
+            "type": "string"
+          },
+          "sourceChainId": {
+            "type": "number"
+          },
+          "sourceToken": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "syncId": {
+            "type": "string"
+          },
+          "syncType": {
+            "$ref": "#/components/schemas/WalletSyncObjectType"
+          },
+          "targetAddress": {
+            "type": "string"
+          },
+          "targetChainId": {
+            "type": "number"
+          },
+          "targetChainSpecifiedSyncObject": {
+            "type": "object"
+          },
+          "targetIssuerAddress": {
+            "type": "string"
+          },
+          "targetToken": {
+            "type": "string"
+          },
+          "targetTransactions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "dateDeleted",
+          "dateEntered",
+          "dateUpdated",
+          "lastChangedBy",
+          "id",
+          "walletId",
+          "status",
+          "syncId",
+          "syncType",
+          "sourceChainId",
+          "sourceToken",
+          "sourceAddress",
+          "targetChainId",
+          "targetIssuerAddress",
+          "targetToken",
+          "targetAddress",
+          "souceChainSpecifiedSyncObject",
+          "targetChainSpecifiedSyncObject",
+          "claimedAt",
+          "targetTransactions"
+        ],
+        "type": "object"
+      },
+      "ActionQueueActitiesResponse": {
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ActionQueue"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "count",
+          "data"
+        ],
+        "type": "object"
+      },
+      "Address": {
+        "properties": {
+          "address": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "address"
+        ],
+        "type": "object"
+      },
+      "Balance": {
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "balance": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "address",
+          "balance"
+        ],
+        "type": "object"
+      },
+      "BesuTokenDefinition": {
+        "properties": {
+          "contractName": {
+            "type": "string"
+          },
+          "contractSourceName": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "contractSourceName",
+          "version",
+          "contractName"
+        ],
+        "type": "object"
+      },
+      "BesuTokenDefinitionWithSource": {
+        "properties": {
+          "contractName": {
+            "type": "string"
+          },
+          "contractSource": {
+            "type": "string"
+          },
+          "contractSourceJson": {
+            "type": "string"
+          },
+          "contractSourceName": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "contractSourceName",
+          "version",
+          "contractName",
+          "contractSource",
+          "contractSourceJson"
+        ],
+        "type": "object"
+      },
+      "Chain": {
+        "properties": {
+          "chainId": {
+            "type": "number"
+          },
+          "chainType": {
+            "$ref": "#/components/schemas/ChainType"
+          },
+          "connection": {
+            "type": "object"
+          },
+          "dateDeleted": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dateEntered": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dateUpdated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "lastChangedBy": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "dateDeleted",
+          "dateEntered",
+          "dateUpdated",
+          "lastChangedBy",
+          "chainId",
+          "name",
+          "connection",
+          "chainType"
+        ],
+        "type": "object"
+      },
+      "ChainType": {
+        "enum": [
+          "setl",
+          "besu",
+          "corda"
+        ],
+        "type": "string"
+      },
+      "CreateActionQueueActivityDto": {
+        "properties": {
+          "syncId": {
+            "type": "string"
+          },
+          "targetTransactions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "syncId",
+          "targetTransactions"
+        ],
+        "type": "object"
+      },
+      "CreateAddressDto": {
+        "properties": {
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "walletId"
+        ],
+        "type": "object"
+      },
+      "CreateBesuChainDto": {
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "endpoint"
+        ],
+        "type": "object"
+      },
+      "CreateBesuTokenContractDefDto": {
+        "properties": {
+          "contractSource": {
+            "type": "string"
+          },
+          "contractSourceName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "contractSourceName",
+          "contractSource"
+        ],
+        "type": "object"
+      },
+      "CreateSetlChainDto": {
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "endpoint"
+        ],
+        "type": "object"
+      },
+      "CreateTokenChainMetaDto": {
+        "properties": {
+          "besuContractDefName": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CreateTokenDto": {
+        "properties": {
+          "chainMeta": {
+            "$ref": "#/components/schemas/CreateTokenChainMetaDto"
+          },
+          "issuerAddress": {
+            "type": "string"
+          },
+          "tokenName": {
+            "type": "string"
+          },
+          "tokenSymbol": {
+            "type": "string"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "tokenName",
+          "issuerAddress",
+          "tokenSymbol",
+          "walletId"
+        ],
+        "type": "object"
+      },
+      "GetActionQueueActivitiesDto": {
+        "properties": {
+          "pageNumber": {
+            "type": "number"
+          },
+          "pageSize": {
+            "type": "number"
+          },
+          "syncId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "syncId",
+          "pageNumber",
+          "pageSize"
+        ],
+        "type": "object"
+      },
+      "GetBalanceDto": {
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "tokenName": {
+            "type": "string"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "tokenName",
+          "walletId"
+        ],
+        "type": "object"
+      },
+      "GetBesuPrivateKeyDto": {
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "walletId",
+          "address"
+        ],
+        "type": "object"
+      },
+      "GetTokensDto": {
+        "properties": {
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "walletId"
+        ],
+        "type": "object"
+      },
+      "ImportBesuChainWalletDto": {
+        "properties": {
+          "keystore": {
+            "type": "string"
+          },
+          "passphrase": {
+            "type": "string"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "walletId",
+          "keystore",
+          "passphrase"
+        ],
+        "type": "object"
+      },
+      "ImportSetlChainWalletDto": {
+        "properties": {
+          "apiKey": {
+            "type": "string"
+          },
+          "setlWalletId": {
+            "type": "number"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "walletId",
+          "setlWalletId",
+          "apiKey"
+        ],
+        "type": "object"
+      },
+      "IssueTokenDto": {
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "issuerAddress": {
+            "type": "string"
+          },
+          "toAddress": {
+            "type": "string"
+          },
+          "tokenName": {
+            "type": "string"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "tokenName",
+          "issuerAddress",
+          "toAddress",
+          "amount",
+          "walletId"
+        ],
+        "type": "object"
+      },
+      "LoginDto": {
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ],
+        "type": "object"
+      },
+      "NewWalletSyncAddressBalanceDto": {
+        "properties": {
+          "sourceAddress": {
+            "type": "string"
+          },
+          "sourceChainId": {
+            "type": "number"
+          },
+          "sourceToken": {
+            "type": "string"
+          },
+          "targetAddress": {
+            "type": "string"
+          },
+          "targetChainId": {
+            "type": "number"
+          },
+          "targetIssuerAddress": {
+            "type": "string"
+          },
+          "targetToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sourceChainId",
+          "sourceAddress",
+          "sourceToken",
+          "targetChainId",
+          "targetAddress",
+          "targetIssuerAddress",
+          "targetToken"
+        ],
+        "type": "object"
+      },
+      "SetTokenBalanceDto": {
+        "properties": {
+          "issuerAddress": {
+            "type": "string"
+          },
+          "newBalance": {
+            "type": "number"
+          },
+          "targetAddress": {
+            "type": "string"
+          },
+          "tokenName": {
+            "type": "string"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "tokenName",
+          "issuerAddress",
+          "targetAddress",
+          "newBalance",
+          "walletId"
+        ],
+        "type": "object"
+      },
+      "Token": {
+        "properties": {
+          "issuerAddress": {
+            "type": "string"
+          },
+          "tokenName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tokenName",
+          "issuerAddress"
+        ],
+        "type": "object"
+      },
+      "TransferTokenDto": {
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "fromAddress": {
+            "type": "string"
+          },
+          "toAddress": {
+            "type": "string"
+          },
+          "tokenName": {
+            "type": "string"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "tokenName",
+          "fromAddress",
+          "toAddress",
+          "amount",
+          "walletId"
+        ],
+        "type": "object"
+      },
+      "UpdateBesuChainDto": {
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "endpoint"
+        ],
+        "type": "object"
+      },
+      "Wallet": {
+        "properties": {
+          "locked": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "walletid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "walletid",
+          "name",
+          "locked"
+        ],
+        "type": "object"
+      },
+      "WalletSyncObject": {
+        "properties": {
+          "dateDeleted": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dateEntered": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dateUpdated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "lastChangedBy": {
+            "type": "string"
+          },
+          "souceChainSpecifiedSyncObject": {
+            "type": "object"
+          },
+          "sourceAddress": {
+            "type": "string"
+          },
+          "sourceChainId": {
+            "type": "number"
+          },
+          "sourceToken": {
+            "type": "string"
+          },
+          "syncType": {
+            "$ref": "#/components/schemas/WalletSyncObjectType"
+          },
+          "targetAddress": {
+            "type": "string"
+          },
+          "targetChainId": {
+            "type": "number"
+          },
+          "targetChainSpecifiedSyncObject": {
+            "type": "object"
+          },
+          "targetIssuerAddress": {
+            "type": "string"
+          },
+          "targetToken": {
+            "type": "string"
+          },
+          "walletId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "dateDeleted",
+          "dateEntered",
+          "dateUpdated",
+          "lastChangedBy",
+          "id",
+          "walletId",
+          "syncType",
+          "sourceChainId",
+          "sourceToken",
+          "sourceAddress",
+          "targetChainId",
+          "targetIssuerAddress",
+          "targetToken",
+          "targetAddress",
+          "souceChainSpecifiedSyncObject",
+          "targetChainSpecifiedSyncObject"
+        ],
+        "type": "object"
+      },
+      "WalletSyncObjectType": {
+        "enum": [
+          "token_sync",
+          "address_balance_sync",
+          "register_balance_sync",
+          "address_transfer_sync"
+        ],
+        "type": "string"
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+
+    },
+    "description": "Interoperable Blockchain solution by SETL",
+    "title": "SETL Interoperable Blockchain",
+    "version": "0.0.1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/chain/besuChain/{chainId}": {
+      "patch": {
+        "operationId": "updateBesuChains",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBesuChainDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chain"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Chain"
+        ]
+      }
+    },
+    "/api/v1/chain/besuContractDefById": {
+      "get": {
+        "operationId": "getBesuContractDefById",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BesuTokenDefinitionWithSource"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Chain"
+        ]
+      }
+    },
+    "/api/v1/chain/besuContractDefs": {
+      "get": {
+        "operationId": "getBesuContractDefs",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "contractSourceName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "onlyLatest",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BesuTokenDefinition"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Chain"
+        ]
+      }
+    },
+    "/api/v1/chain/chain": {
+      "get": {
+        "operationId": "getChains",
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "$ref": "#/components/schemas/Chain"
+                      },
+                      "type": "array"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Chain"
+        ]
+      }
+    },
+    "/api/v1/chain/chain/{chainId}": {
+      "delete": {
+        "operationId": "deleteChains",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chain"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Chain"
+        ]
+      }
+    },
+    "/api/v1/chain/newBesuChain": {
+      "post": {
+        "operationId": "createBesuChain",
+        "parameters": [
+
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBesuChainDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chain"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Chain"
+        ]
+      }
+    },
+    "/api/v1/chain/newBesuContractDef": {
+      "post": {
+        "operationId": "newBesuContractDef",
+        "parameters": [
+
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBesuTokenContractDefDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Chain"
+        ]
+      }
+    },
+    "/api/v1/chain/newSetlChain": {
+      "post": {
+        "operationId": "createSetlChain",
+        "parameters": [
+
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSetlChainDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chain"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Chain"
+        ]
+      }
+    },
+    "/api/v1/login": {
+      "post": {
+        "operationId": "login",
+        "parameters": [
+
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/reporting/token/{chainId}": {
+      "post": {
+        "operationId": "getTokens",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTokensDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Token"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Reporting"
+        ]
+      }
+    },
+    "/api/v1/reporting/{chainId}/balance": {
+      "post": {
+        "operationId": "getBalance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetBalanceDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Balance"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Reporting"
+        ]
+      }
+    },
+    "/api/v1/transaction/{chainId}/createtoken": {
+      "post": {
+        "operationId": "createToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTokenDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Transaction"
+        ]
+      }
+    },
+    "/api/v1/transaction/{chainId}/issuetoken": {
+      "post": {
+        "operationId": "issueToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IssueTokenDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Transaction"
+        ]
+      }
+    },
+    "/api/v1/transaction/{chainId}/setTokenbalance": {
+      "post": {
+        "operationId": "setBalance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetTokenBalanceDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Transaction"
+        ]
+      }
+    },
+    "/api/v1/transaction/{chainId}/transfertoken": {
+      "post": {
+        "operationId": "transferToken",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferTokenDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Transaction"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/besu/importchainwallet/{chainId}": {
+      "post": {
+        "operationId": "besuImportChainWallet",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportBesuChainWalletDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/besu/privatekey/{chainId}": {
+      "post": {
+        "operationId": "getBesuPrivateKey",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetBesuPrivateKeyDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/createActionQueueActivity": {
+      "post": {
+        "operationId": "createActionQueueActivity",
+        "parameters": [
+
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateActionQueueActivityDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/getActionQueueActivity": {
+      "post": {
+        "operationId": "getActionQueueActivity",
+        "parameters": [
+
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetActionQueueActivitiesDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionQueueActitiesResponse"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/setl/importchainwallet/{chainId}": {
+      "post": {
+        "operationId": "setlImportChainWallet",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportSetlChainWalletDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/walletSyncObject/addressbalance/{walletId}": {
+      "post": {
+        "operationId": "createWalletSyncAddressBalance",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "walletId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWalletSyncAddressBalanceDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/walletSyncObject/{id}": {
+      "delete": {
+        "operationId": "deleteWalletSyncObject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/walletSyncObjects/{walletId}": {
+      "get": {
+        "operationId": "getWalletSyncObject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "walletId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/WalletSyncObject"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/wallets": {
+      "get": {
+        "operationId": "getWallets",
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "$ref": "#/components/schemas/Wallet"
+                      },
+                      "type": "array"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/{chainId}/addresses/{walletId}": {
+      "get": {
+        "operationId": "getAddresses",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "walletId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "$ref": "#/components/schemas/Address"
+                      },
+                      "type": "array"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    },
+    "/api/v1/wallet-management/{chainId}/newaddress": {
+      "post": {
+        "operationId": "createAddress",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chainId",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAddressDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": [
+
+            ]
+          }
+        ],
+        "tags": [
+          "Wallet Management"
+        ]
+      }
+    }
+  },
+  "servers": [
+
+  ],
+  "tags": [
+    {
+      "description": "",
+      "name": "Transaction"
+    },
+    {
+      "description": "",
+      "name": "Reporting"
+    },
+    {
+      "description": "",
+      "name": "Wallet Management"
+    },
+    {
+      "description": "",
+      "name": "Chain"
+    }
+  ]
+}

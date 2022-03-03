@@ -1,0 +1,21 @@
+version: "3"
+
+networks:
+  iobc-all:
+    external: true
+services:
+  iobc:
+    image: dreg.ad.setl.io/setl/iobc-server:multichain-1
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    volumes:
+      - "./data:/iobc/data"
+      - "./application.yaml:/iobc/application.yaml"
+    env_file:
+      - ./iobc.env
+    networks:
+      - iobc-all
+
+
+

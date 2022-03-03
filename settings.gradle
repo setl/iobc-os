@@ -1,0 +1,19 @@
+rootProject.name = 'iobc-java'
+include 'model'
+include 'server'
+include 'besu'
+include 'client'
+include 'table'
+include 'iobc-demo'
+
+project(':model').name='iobc-model'
+project(':server').name='iobc-server'
+project(':besu').name='iobc-besu'
+project(':client').name='iobc-client'
+project(':table').name='iobc-table'
+
+include 'iobc-hf'
+include 'corda-workflows'
+include 'corda-contracts'
+include 'corda-services'
+

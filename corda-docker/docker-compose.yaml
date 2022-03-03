@@ -1,0 +1,80 @@
+version: "3.2"
+
+networks:
+  setlnetwork:
+    external: true
+
+volumes:
+  master-data:
+  notary0-data:
+
+services:
+  master:
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 6
+    hostname: master.setl.net
+    image: iobc/corda:4.3
+    networks:
+      setlnetwork:
+        aliases:
+          - master.setl.net
+
+    ports:
+      - 10002:10002
+      - 10003:10003
+      - 10005:10005
+
+    environment:
+      - MY_P2P_PORT=10002
+      - MY_RPC_PORT=10003
+      - MY_RPC_ADMIN_PORT=10005
+
+    working_dir: /opt/corda
+    volumes:
+      - /var/run/:/host/var/run/
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/setl/node.conf:/etc/corda/node.conf
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/setl/cordapps:/opt/corda/cordapps
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/setl/certificates:/opt/corda/certificates
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/setl/additional-node-infos:/opt/corda/additional-node-infos
+      #- ./participants/setl/logs:/opt/corda/logs
+      #- ./participants/iobc/corda.jar:/opt/corda/bin/corda.jar (already copied into the image to that path)
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/setl:/opt/corda
+      - master-data:/opt/corda/persistence
+
+  notary0:
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 6
+    hostname: notary0.setl.net
+    image: iobc/corda:4.3
+    networks:
+      setlnetwork:
+        aliases:
+          - notary0.setl.net
+
+    ports:
+      - 10008:10008
+      - 1009:10009
+      - 10011:10043
+
+    environment:
+      - MY_P2P_PORT=10008
+      - MY_RPC_PORT=10009
+      - MY_RPC_ADMIN_PORT=10043
+
+    working_dir: /opt/corda
+    volumes:
+      - /var/run/:/host/var/run/
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/notary0/node.conf:/etc/corda/node.conf
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/notary0/cordapps:/opt/corda/cordapps
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/notary0/certificates:/opt/corda/certificates
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/notary0/additional-node-infos:/opt/corda/additional-node-infos
+      #- ./participants/notary0/logs:/opt/corda/logs
+      #- ./participants/iobc/corda.jar:/opt/corda/bin/corda.jar (already copied into the image to that path)
+      - ${CORDA_DOCKER_HOME:-/home/ubuntu/cordadeployment}/participants/notary0:/opt/corda
+      - notary0-data:/opt/corda/persistence
